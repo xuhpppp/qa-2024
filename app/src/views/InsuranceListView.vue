@@ -33,11 +33,11 @@
     </div>
 
     <div class="w-full">
-      <label for="region-select" class="font-semibold ms-6">Vùng miền:</label>
+      <label for="region-select" class="font-semibold ms-6">Tỉnh thành:</label>
       <select
         id="region-select"
         class="outline-none ms-4 mt-4"
-        v-model="searchObj.region"
+        v-model="searchObj.city"
       >
         <option value="" selected disabled>---</option>
         <option value="north">Miền Bắc</option>
@@ -105,7 +105,7 @@ import NavBar from "../components/NavBar.vue";
 const searchObj = reactive({
   insurranceCode: ref(""),
   name: ref(""),
-  region: ref(""),
+  city: ref(""),
   registrationPlace: ref(""),
   isValid: ref(""),
   fiveYearsContinuos: ref(""),

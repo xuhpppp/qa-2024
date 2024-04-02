@@ -15,6 +15,14 @@ const routes = [
     },
     component: () => import("@/views/InsuranceListView.vue"),
   },
+  {
+    path: "/bao-cao",
+    name: "Insurance Report Page",
+    meta: {
+      title: "BHYT | Báo cáo",
+    },
+    component: () => import("@/views/ReportView.vue"),
+  },
 ];
 
 export default routes;
