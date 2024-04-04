@@ -25,6 +25,7 @@
     </div>
 
     <StatusReport v-if="currentState === 0" />
+    <EarningOptionReport v-if="currentState === 1" />
   </div>
 </template>
 
@@ -32,6 +33,7 @@
 import NavBar from "@/components/NavBar.vue";
 import { ref } from "vue";
 import StatusReport from "@/components/ReportView/StatusReport.vue";
+import EarningOptionReport from "@/components/ReportView/EarningOptionReport.vue";
 
 const currentState = ref(0);
 

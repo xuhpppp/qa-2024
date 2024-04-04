@@ -23,6 +23,14 @@ const routes = [
     },
     component: () => import("@/views/ReportView.vue"),
   },
+  {
+    path: "/cau-hinh-bhyt",
+    name: "Base Salary Config View",
+    meta: {
+      title: "BHYT | Cấu hình",
+    },
+    component: () => import("@/views/BaseSalaryConfigView.vue"),
+  },
 ];
 
 export default routes;
