@@ -1,7 +1,7 @@
 <template>
   <NavBar />
 
-  <div class="w-full max-w-[512px] mx-auto mt-6">
+  <div class="w-full max-w-[548px] mx-auto mt-6">
     <h1 class="font-bold text-2xl text-center">Tra cứu BHYT</h1>
 
     <div class="mt-6 flex justify-center">
@@ -15,7 +15,7 @@
           id="insurance-id-input"
           class="outline-none border border-gray-300 duration-300 h-10 w-52 focus:border-black ps-2"
           placeholder="Mã số BHYT..."
-          v-model="searchObj.insurranceCode"
+          v-model="searchObj.insuranceCode"
         />
       </div>
 
@@ -40,9 +40,9 @@
         v-model="searchObj.city"
       >
         <option value="" selected disabled>---</option>
-        <option value="north">Miền Bắc</option>
-        <option value="mid">Miền Trung</option>
-        <option value="south">Miền Nam</option>
+        <option v-for="city in citiesList" :value="city" :key="city">
+          {{ city }}
+        </option>
       </select>
 
       <label for="region-select" class="font-semibold ms-6">Nơi đăng ký:</label>
@@ -52,9 +52,9 @@
         v-model="searchObj.registrationPlace"
       >
         <option value="" selected disabled>---</option>
-        <option value="north">Miền Bắc</option>
-        <option value="mid">Miền Trung</option>
-        <option value="south">Miền Nam</option>
+        <option v-for="city in citiesList" :value="city" :key="city">
+          {{ city }}
+        </option>
       </select>
 
       <label for="region-select" class="font-semibold ms-6"
@@ -101,19 +101,30 @@
 <script setup>
 import { ref, reactive } from "vue";
 import NavBar from "../components/NavBar.vue";
+import { insuranceListView } from "../services/modules/medicalInsurance.js";
+import { citiesList } from "../utils/variables.js";
 
 const searchObj = reactive({
-  insurranceCode: ref(""),
+  insuranceCode: ref(""),
   name: ref(""),
   city: ref(""),
   registrationPlace: ref(""),
   isValid: ref(""),
-  fiveYearsContinuos: ref(""),
+  fiveYearsContinuous: ref(""),
 });
 const blankAlert = ref(false);
 
-function onSearchSubmit() {
+async function onSearchSubmit() {
   // check there is at least 1 field having data
   blankAlert.value = !Object.values(searchObj).some((value) => value !== "");
+
+  if (!blankAlert.value) {
+    try {
+      const res = await insuranceListView(searchObj);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 </script>

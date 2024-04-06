@@ -39,6 +39,7 @@ public class MedicalInsurance {
     @Temporal(TemporalType.DATE)
     private Date creationDate;
 
+    // for 5 years continuous mark
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date nearestValidDate;
