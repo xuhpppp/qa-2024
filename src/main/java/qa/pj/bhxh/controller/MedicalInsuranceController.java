@@ -57,13 +57,13 @@ public class MedicalInsuranceController {
 
         if (insuranceCode != null) {
             medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().contains(insuranceCode))
+                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().toLowerCase().contains(insuranceCode))
                     .collect(Collectors.toList());
         }
 
         if (name != null) {
             medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getFullName().contains(name))
+                    .filter(medicalInsurance -> medicalInsurance.getFullName().toLowerCase().contains(name))
                     .collect(Collectors.toList());
         }
 
