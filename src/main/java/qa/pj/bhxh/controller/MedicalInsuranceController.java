@@ -57,26 +57,22 @@ public class MedicalInsuranceController {
 
         if (insuranceCode != null) {
             medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().equals(insuranceCode))
+                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().contains(insuranceCode))
                     .collect(Collectors.toList());
         }
 
         if (name != null) {
             medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getFullName().equals(name))
+                    .filter(medicalInsurance -> medicalInsurance.getFullName().contains(name))
                     .collect(Collectors.toList());
         }
 
-        if (insuranceCode != null) {
-            medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().equals(insuranceCode))
-                    .collect(Collectors.toList());
+        if (city != null) {
+
         }
 
-        if (insuranceCode != null) {
-            medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().equals(insuranceCode))
-                    .collect(Collectors.toList());
+        if (registrationPlace != null) {
+
         }
 
         return ResponseEntity.ok(medicalInsurances);
