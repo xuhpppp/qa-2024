@@ -1,7 +1,7 @@
 <template>
   <NavBar />
 
-  <div class="w-full max-w-[548px] mx-auto mt-6">
+  <div class="w-full max-w-[600px] mx-auto mt-6">
     <h1 class="font-bold text-2xl text-center">Tra cứu BHYT</h1>
 
     <div class="mt-6 flex justify-center">
