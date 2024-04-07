@@ -49,6 +49,7 @@
 </template>
 
 <script setup>
+import router from "@/router";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
 
@@ -58,6 +59,7 @@ const loginSchema = Yup.object().shape({
 });
 
 function onLoginSubmit(values) {
-  alert(values);
+  console.log(values);
+  router.push("/danh-sach-bhyt");
 }
 </script>
