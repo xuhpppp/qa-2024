@@ -9,6 +9,7 @@ import qa.pj.bhxh.model.MedicalInsurance;
 import qa.pj.bhxh.repository.MedicalInsuranceRepository;
 import qa.pj.bhxh.service.MedicalInsuranceService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,5 +80,12 @@ public class MedicalInsuranceController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/export_xls")
+    public ResponseEntity<Void> exportMedicalInsurance(@RequestParam String request) {
+        String[] idStrings = request.split(";");
+        System.out.printf(Arrays.toString(idStrings));
+        return ResponseEntity.noContent().build();
     }
 }
