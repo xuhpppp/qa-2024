@@ -96,6 +96,11 @@
       Vui lòng điền ít nhất 1 trường thông tin
     </p>
   </div>
+
+  <InsuranceTable
+    v-if="insuranceList.length !== 0"
+    :insurance-list="insuranceList"
+  />
 </template>
 
 <script setup>
@@ -103,6 +108,7 @@ import { ref, reactive } from "vue";
 import NavBar from "../components/NavBar.vue";
 import { insuranceListView } from "../services/modules/medicalInsurance.js";
 import { citiesList } from "../utils/variables.js";
+import InsuranceTable from "../components/InsuranceTable.vue";
 
 const searchObj = reactive({
   insuranceCode: ref(""),
@@ -113,6 +119,7 @@ const searchObj = reactive({
   fiveYearsContinuous: ref(""),
 });
 const blankAlert = ref(false);
+const insuranceList = ref([]);
 
 async function onSearchSubmit() {
   // check there is at least 1 field having data
@@ -121,7 +128,8 @@ async function onSearchSubmit() {
   if (!blankAlert.value) {
     try {
       const res = await insuranceListView(searchObj);
-      console.log(res);
+      insuranceList.value = res.data;
+      console.log(insuranceList.value);
     } catch (error) {
       console.log(error);
     }
