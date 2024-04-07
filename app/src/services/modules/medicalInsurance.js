@@ -1,6 +1,6 @@
 import { axios } from "../axios";
 
-function insuranceListView(searchObj) {
+function insuranceListView(searchObj, page) {
   return axios.get("/api/medical-insurance/list-view", {
     params: {
       insuranceCode: searchObj.insuranceCode,
@@ -9,6 +9,7 @@ function insuranceListView(searchObj) {
       registrationPlace: searchObj.registrationPlace,
       isValid: searchObj.isValid,
       fiveYearsContinuous: searchObj.fiveYearsContinuous,
+      page: page,
     },
   });
 }

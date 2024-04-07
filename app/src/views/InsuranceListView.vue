@@ -98,9 +98,20 @@
   </div>
 
   <InsuranceTable
-    v-if="insuranceList.length !== 0"
+    v-if="insuranceList.length > 0"
     :insurance-list="insuranceList"
   />
+
+  <div class="mx-auto w-fit mt-8" v-if="!firstSearch">
+    <p>Hiện đang xem kết quả tại trang {{ page + 1 }}</p>
+    <label>Trang muốn xem: </label>
+    <input
+      type="number"
+      min="0"
+      class="outline-none border border-black w-10 px-1"
+      v-model="pageInput"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -120,6 +131,9 @@ const searchObj = reactive({
 });
 const blankAlert = ref(false);
 const insuranceList = ref([]);
+const page = ref(0);
+const pageInput = ref("");
+const firstSearch = ref(true);
 
 async function onSearchSubmit() {
   // check there is at least 1 field having data
@@ -127,9 +141,18 @@ async function onSearchSubmit() {
 
   if (!blankAlert.value) {
     try {
-      const res = await insuranceListView(searchObj);
+      firstSearch.value = false;
+
+      if (pageInput.value !== "") {
+        if (Number(pageInput.value) >= 0) {
+          page.value = Number(pageInput.value) - 1;
+        } else {
+          page.value = 0;
+        }
+      }
+
+      const res = await insuranceListView(searchObj, page.value);
       insuranceList.value = res.data;
-      console.log(insuranceList.value);
     } catch (error) {
       console.log(error);
     }
