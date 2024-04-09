@@ -19,7 +19,10 @@ import qa.pj.bhxh.service.MedicalInsuranceService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +80,33 @@ public class MedicalInsuranceController {
             allMedicalInsurances.removeIf(medicalInsurance ->
                     !medicalInsurance.getRegistrationPlace().toLowerCase().contains(registrationPlace.toLowerCase()));
         }
+
+        if (isValid != null && !isValid.isEmpty()) {
+            LocalDate today = LocalDate.now();
+
+            if ("valid".equals(isValid)) {
+                allMedicalInsurances.removeIf(medicalInsurance ->
+                        !(new Date(medicalInsurance.getValidFrom().getTime()).toLocalDate().isBefore(today) &&
+                                new Date(medicalInsurance.getValidTo().getTime()).toLocalDate().isAfter(today)));
+            } else {
+                allMedicalInsurances.removeIf(medicalInsurance ->
+                        !(new Date(medicalInsurance.getValidFrom().getTime()).toLocalDate().isAfter(today) ||
+                                new Date(medicalInsurance.getValidTo().getTime()).toLocalDate().isBefore(today)));
+            }
+
+        }
+
+        if (fiveYearsContinuous != null && !fiveYearsContinuous.isEmpty()) {
+            LocalDate today = LocalDate.now();
+            if ("true".equals(fiveYearsContinuous)) {
+                allMedicalInsurances.removeIf(medicalInsurance ->
+                        !(new Date(medicalInsurance.getNearestValidDate().getTime()).toLocalDate().isAfter(today)));
+            } else {
+                allMedicalInsurances.removeIf(medicalInsurance ->
+                        !(new Date(medicalInsurance.getNearestValidDate().getTime()).toLocalDate().isBefore(today)));
+            }
+        }
+
 
         int startIndex = page * page_size;
         int endIndex = Math.min(startIndex + page_size, allMedicalInsurances.size());

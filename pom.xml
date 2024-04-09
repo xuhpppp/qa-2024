@@ -62,7 +62,12 @@
 			<artifactId>cdc-1.1.2-stub</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
