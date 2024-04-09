@@ -20,7 +20,7 @@ function getSalaryAPI() {
 }
 
 function updateSalaryAPI(amount) {
-  return axios.get("/api/medical-insurance/get-salary", {
+  return axios.get("/api/medical-insurance/update-salary", {
     params: {
       amount: amount,
     },
