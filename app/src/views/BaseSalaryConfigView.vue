@@ -62,12 +62,19 @@
 <script setup>
 import NavBar from "@/components/NavBar.vue";
 import { computed, ref } from "vue";
+import {
+  getSalaryAPI,
+  updateSalaryAPI,
+} from "@/services/modules/medicalInsurance.js";
 
 const isUpdatingSalary = ref(false);
 const newSalary = ref("");
 const updateValid = ref(true);
 
-const currentBasicSalary = ref(1800000);
+// get basic salary
+const getSalaryAPIRes = await getSalaryAPI();
+const currentBasicSalary = ref(Number(getSalaryAPIRes.data.amount));
+
 const salaryComputed = computed(() => {
   let salaryStr = String(currentBasicSalary.value);
   let finalStr = "";
@@ -86,13 +93,26 @@ const salaryComputed = computed(() => {
   return finalStr + "đ";
 });
 
-function confirmNewSalary() {
+async function confirmNewSalary() {
   if (newSalary.value === "") {
     updateValid.value = false;
   } else {
+    const oldSalary = currentBasicSalary.value;
     currentBasicSalary.value = Number(newSalary.value);
     isUpdatingSalary.value = false;
     updateValid.value = true;
+
+    try {
+      const res = await updateSalaryAPI(String(newSalary.value));
+      if (res.status === 200) {
+        alert("Đã cập nhật lương cơ sở thành công");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Đã có lỗi xảy ra");
+      // roll-back
+      currentBasicSalary.value = oldSalary;
+    }
   }
 }
 </script>

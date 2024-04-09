@@ -15,4 +15,16 @@ function insuranceListView(searchObj, page) {
   });
 }
 
-export { insuranceListView };
+function getSalaryAPI() {
+  return axios.get("/api/medical-insurance/get-salary");
+}
+
+function updateSalaryAPI(amount) {
+  return axios.get("/api/medical-insurance/get-salary", {
+    params: {
+      amount: amount,
+    },
+  });
+}
+
+export { insuranceListView, getSalaryAPI, updateSalaryAPI };
