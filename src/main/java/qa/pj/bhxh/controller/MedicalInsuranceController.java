@@ -98,7 +98,7 @@ public class MedicalInsuranceController {
 
         if (fiveYearsContinuous != null && !fiveYearsContinuous.isEmpty()) {
             LocalDate today = LocalDate.now();
-            if ("true".equals(fiveYearsContinuous)) {
+            if ("false".equals(fiveYearsContinuous)) {
                 allMedicalInsurances.removeIf(medicalInsurance ->
                         !(new Date(medicalInsurance.getNearestValidDate().getTime()).toLocalDate().isAfter(today)));
             } else {
