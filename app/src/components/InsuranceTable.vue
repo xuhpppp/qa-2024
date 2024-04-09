@@ -4,6 +4,7 @@
       <th>Mã số BHYT</th>
       <th>Họ tên</th>
       <th>Ngày sinh</th>
+      <th>Giới tính</th>
       <th>Địa chỉ</th>
       <th>Nơi đăng ký khám chữa bệnh</th>
       <th>Giá trị sử dụng</th>
@@ -22,6 +23,8 @@
       <th>{{ insurance.insuranceCode }}</th>
       <th>{{ insurance.fullName }}</th>
       <th>{{ insurance.dob }}</th>
+      <th v-if="insurance.gender === 'MALE'">Nam</th>
+      <th v-else>Nữ</th>
       <th>{{ insurance.address }}</th>
       <th>{{ insurance.registrationPlace }}</th>
       <th>{{ insurance.validFrom }} - {{ insurance.validTo }}</th>
@@ -71,21 +74,25 @@ function tickInsuranceRow(id) {
 }
 
 function downloadCsv() {
-  let requestStr = "";
-  for (let id of checkedInsurance.value) {
-    requestStr += String(id) + ";";
-  }
-  if (requestStr.length > 0) {
-    requestStr = requestStr.substring(0, requestStr.length - 1);
-  }
+  if (checkedInsurance.value.length === 0) {
+    alert("Vui lòng chọn ít nhất 1 bảo hiểm");
+  } else {
+    let requestStr = "";
+    for (let id of checkedInsurance.value) {
+      requestStr += String(id) + ";";
+    }
+    if (requestStr.length > 0) {
+      requestStr = requestStr.substring(0, requestStr.length - 1);
+    }
 
-  window
-    .open(
-      "http://localhost:8080/api/medical-insurance/export_xls?request=" +
-        requestStr,
-      "_blank"
-    )
-    .focus();
+    window
+      .open(
+        "http://localhost:8080/api/medical-insurance/export_xls?request=" +
+          requestStr,
+        "_blank"
+      )
+      .focus();
+  }
 }
 
 defineExpose({ downloadCsv });
