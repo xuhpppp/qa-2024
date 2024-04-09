@@ -4,20 +4,20 @@
   <div class="w-full max-w-[512px] mx-auto mt-6">
     <div class="flex mx-auto w-fit">
       <div
-        class="h-14 w-60 font-semibold text-center border border-gray-300 leading-[56px] duration-300 hover:text-white hover:bg-black hover:cursor-pointer"
+        class="h-14 w-60 font-semibold text-center border border-gray-300 leading-[56px] duration-300 hover:text-white hover:bg-blue-300 hover:cursor-pointer"
         @click="changeCurrentState(0)"
         :class="[
-          currentState === 0 ? 'bg-black text-white' : 'bg-white text-black',
+          currentState === 0 ? 'bg-blue-400 text-white' : 'bg-white text-black',
         ]"
       >
         Báo cáo tình trạng thẻ BHYT
       </div>
 
       <div
-        class="h-14 w-60 font-semibold text-center border border-gray-300 leading-[56px] duration-300 hover:text-white hover:bg-black hover:cursor-pointer"
+        class="h-14 w-60 font-semibold text-center border border-gray-300 leading-[56px] duration-300 hover:text-white hover:bg-blue-300 hover:cursor-pointer"
         @click="changeCurrentState(1)"
         :class="[
-          currentState === 1 ? 'bg-black text-white' : 'bg-white text-black',
+          currentState === 1 ? 'bg-blue-400 text-white' : 'bg-white text-black',
         ]"
       >
         Báo cáo mức hưởng thẻ BHYT

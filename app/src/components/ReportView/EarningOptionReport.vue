@@ -10,6 +10,9 @@
       <option value="" selected disabled>---</option>
       <option value="option-1">Mức 1</option>
       <option value="option-2">Mức 2</option>
+      <option value="option-3">Mức 3</option>
+      <option value="option-4">Mức 4</option>
+      <option value="option-5">Mức 5</option>
     </select>
 
     <label for="region-select" class="font-semibold ms-6">Tỉnh thành:</label>
