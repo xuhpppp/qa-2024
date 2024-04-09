@@ -8,7 +8,7 @@ function insuranceListView(searchObj, page) {
       city: searchObj.city,
       registrationPlace: searchObj.registrationPlace,
       isValid: searchObj.isValid,
-      earningOption: searchObj.earningOption,
+      earningGrade: searchObj.earningOption,
       fiveYearsContinuous: searchObj.fiveYearsContinuous,
       page: page,
     },
