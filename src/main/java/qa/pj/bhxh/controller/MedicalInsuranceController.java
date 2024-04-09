@@ -66,14 +66,16 @@ public class MedicalInsuranceController {
                     .toList());
         }
 
-        if (city != null) {
+        if (city != null && !city.isEmpty()) {
             filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
                     .filter(medicalInsurance -> medicalInsurance.getAddress().toLowerCase().contains(city.toLowerCase()))
                     .toList());
         }
 
-        if (registrationPlace != null) {
-
+        if (registrationPlace != null && !registrationPlace.isEmpty()) {
+            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
+                    .filter(medicalInsurance -> medicalInsurance.getRegistrationPlace().toLowerCase().contains(registrationPlace.toLowerCase()))
+                    .toList());
         }
 
         int startIndex = page * page_size;
