@@ -50,46 +50,40 @@ public class MedicalInsuranceController {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int page_size
     ) {
-        List<MedicalInsurance> filteredMedicalInsurances = new ArrayList<>();
-
         List<MedicalInsurance> allMedicalInsurances = medicalInsuranceRepository.findAll();
 
-        if (insuranceCode != null  && !insuranceCode.isEmpty()) {
-            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().toLowerCase().contains(insuranceCode.toLowerCase()))
-                    .toList());
-        }
-
-        if (name != null && !name.isEmpty()) {
-            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getFullName().toLowerCase().contains(name.toLowerCase()))
-                    .toList());
-        }
-
-        if (city != null && !city.isEmpty()) {
-            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getAddress().toLowerCase().contains(city.toLowerCase()))
-                    .toList());
-        }
-
-        if (registrationPlace != null && !registrationPlace.isEmpty()) {
-            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getRegistrationPlace().toLowerCase().contains(registrationPlace.toLowerCase()))
-                    .toList());
+        if (insuranceCode != null && !insuranceCode.isEmpty()) {
+            allMedicalInsurances.removeIf(medicalInsurance ->
+                    !medicalInsurance.getInsuranceCode().toLowerCase().contains(insuranceCode.toLowerCase()));
         }
 
         if (earningGrade != null && !earningGrade.isEmpty()) {
-            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().charAt(2) == earningGrade.charAt(0))
-                    .toList());
+            char gradeChar = earningGrade.charAt(0);
+            allMedicalInsurances.removeIf(medicalInsurance ->
+                    medicalInsurance.getInsuranceCode().charAt(2) != gradeChar);
+        }
+
+        if (name != null && !name.isEmpty()) {
+            allMedicalInsurances.removeIf(medicalInsurance ->
+                    !medicalInsurance.getFullName().toLowerCase().contains(name.toLowerCase()));
+        }
+
+        if (city != null && !city.isEmpty()) {
+            allMedicalInsurances.removeIf(medicalInsurance ->
+                    !medicalInsurance.getAddress().toLowerCase().contains(city.toLowerCase()));
+        }
+
+        if (registrationPlace != null && !registrationPlace.isEmpty()) {
+            allMedicalInsurances.removeIf(medicalInsurance ->
+                    !medicalInsurance.getRegistrationPlace().toLowerCase().contains(registrationPlace.toLowerCase()));
         }
 
         int startIndex = page * page_size;
-        int endIndex = Math.min(startIndex + page_size, filteredMedicalInsurances.size());
-        List<MedicalInsurance> paginatedMedicalInsurances = filteredMedicalInsurances.subList(startIndex, endIndex);
-
+        int endIndex = Math.min(startIndex + page_size, allMedicalInsurances.size());
+        List<MedicalInsurance> paginatedMedicalInsurances = allMedicalInsurances.subList(startIndex, endIndex);
 
         return ResponseEntity.ok(paginatedMedicalInsurances);
+
     }
 
     @GetMapping("/get-salary")
