@@ -22,6 +22,7 @@ import qa.pj.bhxh.service.MedicalInsuranceService;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -49,33 +50,38 @@ public class MedicalInsuranceController {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int page_size
     ) {
-        Pageable pageable = PageRequest.of(page, page_size);
+        List<MedicalInsurance> filteredMedicalInsurances = new ArrayList<>();
 
-        Page<MedicalInsurance> medicalInsurancePage = medicalInsuranceRepository.findAll(pageable);
+        List<MedicalInsurance> allMedicalInsurances = medicalInsuranceRepository.findAll();
 
-        List<MedicalInsurance> medicalInsurances = medicalInsurancePage.getContent();
-
-        if (insuranceCode != null) {
-            medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().toLowerCase().contains(insuranceCode))
-                    .collect(Collectors.toList());
+        if (insuranceCode != null  && !insuranceCode.isEmpty()) {
+            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
+                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().toLowerCase().contains(insuranceCode.toLowerCase()))
+                    .toList());
         }
 
-        if (name != null) {
-            medicalInsurances = medicalInsurances.stream()
-                    .filter(medicalInsurance -> medicalInsurance.getFullName().toLowerCase().contains(name))
-                    .collect(Collectors.toList());
+        if (name != null && !name.isEmpty()) {
+            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
+                    .filter(medicalInsurance -> medicalInsurance.getFullName().toLowerCase().contains(name.toLowerCase()))
+                    .toList());
         }
 
         if (city != null) {
-
+            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
+                    .filter(medicalInsurance -> medicalInsurance.getAddress().toLowerCase().contains(city.toLowerCase()))
+                    .toList());
         }
 
         if (registrationPlace != null) {
 
         }
 
-        return ResponseEntity.ok(medicalInsurances);
+        int startIndex = page * page_size;
+        int endIndex = Math.min(startIndex + page_size, filteredMedicalInsurances.size());
+        List<MedicalInsurance> paginatedMedicalInsurances = filteredMedicalInsurances.subList(startIndex, endIndex);
+
+
+        return ResponseEntity.ok(paginatedMedicalInsurances);
     }
 
     @PostMapping
