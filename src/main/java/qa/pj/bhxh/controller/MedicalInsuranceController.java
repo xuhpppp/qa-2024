@@ -5,17 +5,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import qa.pj.bhxh.model.BaseSalary;
 import qa.pj.bhxh.model.Gender;
 import qa.pj.bhxh.model.MedicalInsurance;
+import qa.pj.bhxh.repository.BaseSalaryRepository;
 import qa.pj.bhxh.repository.MedicalInsuranceRepository;
 import qa.pj.bhxh.service.MedicalInsuranceService;
 
@@ -23,10 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/medical-insurance")
@@ -34,9 +30,12 @@ public class MedicalInsuranceController {
     private final MedicalInsuranceService medicalInsuranceService;
     private final MedicalInsuranceRepository medicalInsuranceRepository;
 
-    public MedicalInsuranceController(MedicalInsuranceService medicalInsuranceService, MedicalInsuranceRepository medicalInsuranceRepository) {
+    private final BaseSalaryRepository baseSalaryRepository;
+
+    public MedicalInsuranceController(MedicalInsuranceService medicalInsuranceService, MedicalInsuranceRepository medicalInsuranceRepository, BaseSalaryRepository baseSalaryRepository) {
         this.medicalInsuranceService = medicalInsuranceService;
         this.medicalInsuranceRepository = medicalInsuranceRepository;
+        this.baseSalaryRepository = baseSalaryRepository;
     }
 
     @GetMapping("/list-view")
@@ -86,6 +85,28 @@ public class MedicalInsuranceController {
         return ResponseEntity.ok(paginatedMedicalInsurances);
     }
 
+    @GetMapping("/get-salary")
+    public ResponseEntity<BaseSalary> getSalary(@RequestParam Long id) {
+        Optional<BaseSalary> salary = baseSalaryRepository.findById(id);
+        return salary.map(baseSalary -> new ResponseEntity<>(baseSalary, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/update-salary")
+    public ResponseEntity<BaseSalary> updateSalary(@RequestParam Long id, @RequestParam Long amount) {
+        Optional<BaseSalary> salaryOptional = baseSalaryRepository.findById(id);
+
+        if (salaryOptional.isPresent()) {
+            BaseSalary baseSalary = salaryOptional.get();
+
+            baseSalary.amount = amount;
+
+            BaseSalary updatedSalary = baseSalaryRepository.save(baseSalary);
+
+            return new ResponseEntity<>(updatedSalary, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PostMapping
     public ResponseEntity<MedicalInsurance> createMedicalInsurance(@Valid @RequestBody MedicalInsurance medicalInsurance) {
         MedicalInsurance savedInsurance = medicalInsuranceRepository.save(medicalInsurance);
