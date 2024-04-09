@@ -46,6 +46,7 @@ public class MedicalInsuranceController {
             @RequestParam(required = false) String registrationPlace,
             @RequestParam(required = false) String isValid,
             @RequestParam(required = false) String fiveYearsContinuous,
+            @RequestParam(required = false) String earningGrade,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int page_size
     ) {
@@ -77,6 +78,12 @@ public class MedicalInsuranceController {
                     .toList());
         }
 
+        if (earningGrade != null && !earningGrade.isEmpty()) {
+            filteredMedicalInsurances.addAll(allMedicalInsurances.stream()
+                    .filter(medicalInsurance -> medicalInsurance.getInsuranceCode().charAt(2) == earningGrade.charAt(0))
+                    .toList());
+        }
+
         int startIndex = page * page_size;
         int endIndex = Math.min(startIndex + page_size, filteredMedicalInsurances.size());
         List<MedicalInsurance> paginatedMedicalInsurances = filteredMedicalInsurances.subList(startIndex, endIndex);
@@ -86,14 +93,16 @@ public class MedicalInsuranceController {
     }
 
     @GetMapping("/get-salary")
-    public ResponseEntity<BaseSalary> getSalary(@RequestParam Long id) {
-        Optional<BaseSalary> salary = baseSalaryRepository.findById(id);
+    public ResponseEntity<BaseSalary> getSalary() {
+        int id = 1;
+        Optional<BaseSalary> salary = baseSalaryRepository.findById((long) id);
         return salary.map(baseSalary -> new ResponseEntity<>(baseSalary, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/update-salary")
-    public ResponseEntity<BaseSalary> updateSalary(@RequestParam Long id, @RequestParam Long amount) {
-        Optional<BaseSalary> salaryOptional = baseSalaryRepository.findById(id);
+    public ResponseEntity<BaseSalary> updateSalary( @RequestParam Long amount) {
+        int id = 1;
+        Optional<BaseSalary> salaryOptional = baseSalaryRepository.findById((long) id);
 
         if (salaryOptional.isPresent()) {
             BaseSalary baseSalary = salaryOptional.get();
