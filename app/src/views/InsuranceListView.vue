@@ -76,7 +76,7 @@
       <select
         id="region-select"
         class="outline-none ms-4 mt-4"
-        v-model="searchObj.fiveYearsContinuos"
+        v-model="searchObj.fiveYearsContinuous"
       >
         <option value="" selected disabled>---</option>
         <option value="true">Rồi</option>
