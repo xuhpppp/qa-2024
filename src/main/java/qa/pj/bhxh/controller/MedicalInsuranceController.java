@@ -221,7 +221,7 @@ public class MedicalInsuranceController {
                 row.createCell(5).setCellValue(medicalInsurance.getAddress());
                 row.createCell(6).setCellValue(medicalInsurance.getRegistrationPlace());
                 row.createCell(7).setCellValue(dateFormat.format(medicalInsurance.getValidTo()));
-                row.createCell(8).setCellValue("null");
+                row.createCell(8).setCellValue(dateFormat.format(medicalInsurance.getNearestValidDate()));
                 rowNum++;
             }
 
