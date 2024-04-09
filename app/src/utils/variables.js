@@ -49,7 +49,7 @@ const citiesList = [
   "Bình Thuận",
   "Hồ Chí Minh",
   "Long An",
-  "Bà Rịa - Vũng Tàu",
+  "Bà Rịa Vũng Tàu",
   "Đồng Tháp",
   "An Giang",
   "Tiền Giang",
