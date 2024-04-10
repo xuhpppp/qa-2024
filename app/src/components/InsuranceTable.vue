@@ -1,4 +1,6 @@
 <template>
+  <p class="text-red-400 text-center" v-if="exportInvalid">Vui lòng chọn ít nhất 1 bảo hiểm</p>
+  
   <table class="mt-4 mx-auto">
     <tr>
       <th>Mã số BHYT</th>
@@ -43,6 +45,7 @@ defineProps({
 });
 
 const checkedInsurance = ref([]);
+const exportInvalid = ref(false);
 
 function isValidCalculated(startDate, endDate) {
   // Parse the string dates into Date objects
@@ -63,6 +66,8 @@ function isValidCalculated(startDate, endDate) {
 }
 
 function tickInsuranceRow(id) {
+  exportInvalid.value = false;
+  
   if (!checkedInsurance.value.includes(id)) {
     checkedInsurance.value.push(id);
   } else {
@@ -75,7 +80,7 @@ function tickInsuranceRow(id) {
 
 function downloadCsv() {
   if (checkedInsurance.value.length === 0) {
-    alert("Vui lòng chọn ít nhất 1 bảo hiểm");
+    exportInvalid.value = true;
   } else {
     let requestStr = "";
     for (let id of checkedInsurance.value) {
@@ -92,6 +97,8 @@ function downloadCsv() {
         "_blank"
       )
       .focus();
+
+    alert("Xuất báo cáo thành công!");
   }
 }
 
