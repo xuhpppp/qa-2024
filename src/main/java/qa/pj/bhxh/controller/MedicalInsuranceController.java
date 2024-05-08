@@ -26,6 +26,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/medical-insurance")
@@ -109,8 +110,10 @@ public class MedicalInsuranceController {
 
 
         int startIndex = page * page_size;
-        int endIndex = Math.min(startIndex + page_size, allMedicalInsurances.size());
-        List<MedicalInsurance> paginatedMedicalInsurances = allMedicalInsurances.subList(startIndex, endIndex);
+        List<MedicalInsurance> paginatedMedicalInsurances = allMedicalInsurances.stream()
+                .skip(startIndex)
+                .limit(page_size)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(paginatedMedicalInsurances);
 
