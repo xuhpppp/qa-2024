@@ -31,13 +31,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/medical-insurance")
 public class MedicalInsuranceController {
-    private final MedicalInsuranceService medicalInsuranceService;
     private final MedicalInsuranceRepository medicalInsuranceRepository;
 
     private final BaseSalaryRepository baseSalaryRepository;
 
-    public MedicalInsuranceController(MedicalInsuranceService medicalInsuranceService, MedicalInsuranceRepository medicalInsuranceRepository, BaseSalaryRepository baseSalaryRepository) {
-        this.medicalInsuranceService = medicalInsuranceService;
+    public MedicalInsuranceController(MedicalInsuranceRepository medicalInsuranceRepository, BaseSalaryRepository baseSalaryRepository) {
         this.medicalInsuranceRepository = medicalInsuranceRepository;
         this.baseSalaryRepository = baseSalaryRepository;
     }
@@ -116,7 +114,6 @@ public class MedicalInsuranceController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(paginatedMedicalInsurances);
-
     }
 
     @GetMapping("/get-salary")

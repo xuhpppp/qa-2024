@@ -10,4 +10,28 @@ public class BaseSalary {
 
     @Column(nullable = false)
     public Long amount;
+
+    public BaseSalary(Long id, Long amount) {
+        this.id = id;
+        this.amount = amount;
+    }
+
+    public BaseSalary() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
 }
