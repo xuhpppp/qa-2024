@@ -1,20 +1,20 @@
 package qa.pj.bhxh;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.*;
+import qa.pj.bhxh.controller.MedicalInsuranceController;
 import qa.pj.bhxh.model.BaseSalary;
 import qa.pj.bhxh.model.Gender;
 import qa.pj.bhxh.model.MedicalInsurance;
@@ -29,21 +29,20 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+
 
 @SpringBootTest
 class BhxhApplicationTests {
 	@Autowired
 	private BaseSalaryRepository baseSalaryRepository;
 	@Autowired
-	private MedicalInsuranceRepository medicalInsuranceRepository;
+	private static MedicalInsuranceRepository medicalInsuranceRepository;
 	@Autowired
 	private EntityManager entityManager;
+	@Autowired
+	private MedicalInsuranceController medicalInsuranceController;
 
-	void testListView() {
 
-	}
 	void testExportMedicalInsurance() throws IOException {
 		List<MedicalInsurance> medicalInsurances = new ArrayList<>();
 		MedicalInsurance medicalInsurance1 = new MedicalInsurance();
@@ -211,5 +210,21 @@ class BhxhApplicationTests {
 			var update_amount  = updatedResult.get().getAmount();
 			assertEquals(result.get().getAmount(), update_amount);
 		}
+	}
+
+	@Test
+	public void testListView() {
+		// Act
+		ResponseEntity<List<MedicalInsurance>> response1 = medicalInsuranceController.listView(null, null, null, null, null, null, null, 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response2 = medicalInsuranceController.listView("SV4018395421067", null, null, "Hà Nội", null, "", "null", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response3 = medicalInsuranceController.listView("", null, null, null, "", null, "null", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response4 = medicalInsuranceController.listView(null, "", null, "", "valid", null, "null", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response5 = medicalInsuranceController.listView(null, "Nguyễn Xuân Hưng", "", null, null, "true", "null", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response6 = medicalInsuranceController.listView(null, null, "Hà Nội", null, null, null, "", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response7 = medicalInsuranceController.listView(null, null, null, null, null, null, "1", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response8 = medicalInsuranceController.listView(null, "hưng", null, "hà nội", "inValid", "false", "1", 0, 10);
+		ResponseEntity<List<MedicalInsurance>> response9 = medicalInsuranceController.listView(null, "hưng", null, "hà nội", "inValid", null, "1", 0, 10);
+
+		assertEquals(HttpStatus.OK, response1.getStatusCode());
 	}
 }
