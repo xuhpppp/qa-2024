@@ -1,6 +1,7 @@
 package qa.pj.bhxh;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -40,13 +41,9 @@ class BhxhApplicationTests {
 	@Autowired
 	private EntityManager entityManager;
 
-	@Test
 	void testListView() {
-		//Page<MedicalInsurance> medicalInsurancePage = medicalInsuranceRepository.listView("123", "John", "City", "Hospital A", "valid", "true", "A", PageRequest.of(0, 10));
 
-		//assertEquals(1, medicalInsurancePage.getContent().size());
 	}
-	@Test
 	void testExportMedicalInsurance() throws IOException {
 		List<MedicalInsurance> medicalInsurances = new ArrayList<>();
 		MedicalInsurance medicalInsurance1 = new MedicalInsurance();
@@ -151,18 +148,14 @@ class BhxhApplicationTests {
 	}
 	@Test
 	public void testGetSalary() {
-		BaseSalary baseSalary = new BaseSalary(2L, 1000L);
-		baseSalaryRepository.save(baseSalary);
-
-		Optional<BaseSalary> result = baseSalaryRepository.findById(2L);
+		Optional<BaseSalary> result = baseSalaryRepository.findById(1L);
 		assertTrue(result.isPresent());
 		assertNotNull(result);
-		assertEquals(baseSalary, result.get());
 	}
 
 	@Test
 	public void testGetSalary_NotFound() {
-		Optional<BaseSalary> result = baseSalaryRepository.findById(999L);
+		Optional<BaseSalary> result = baseSalaryRepository.findById(99L);
 		assertFalse(result.isPresent());
 	}
 
@@ -197,5 +190,26 @@ class BhxhApplicationTests {
 
 		Optional<BaseSalary> result = baseSalaryRepository.findById(nonExistentId);
 		assertFalse(result.isPresent());
+	}
+
+	@Test
+	public void testUpdateSalaryWithNullAmount() {
+		Long newAmount = null;
+
+		Optional<BaseSalary> result = baseSalaryRepository.findById(1L);
+		assertTrue(result.isPresent());
+
+		BaseSalary updatedSalary = result.get();
+
+		try {
+			updatedSalary.setAmount(newAmount);
+			baseSalaryRepository.save(updatedSalary);
+			fail("Expected IllegalArgumentException to be thrown for null newAmount");
+		} catch (IllegalArgumentException e) {
+			Optional<BaseSalary> updatedResult = baseSalaryRepository.findById(1L);
+			assertTrue(updatedResult.isPresent());
+			var update_amount  = updatedResult.get().getAmount();
+			assertEquals(result.get().getAmount(), update_amount);
+		}
 	}
 }

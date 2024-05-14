@@ -32,6 +32,9 @@ public class BaseSalary {
     }
 
     public void setAmount(Long amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("Amount cannot be null");
+        }
         this.amount = amount;
     }
 }
