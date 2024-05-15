@@ -11,11 +11,6 @@ public class BaseSalary {
     @Column(nullable = false)
     public Long amount;
 
-    public BaseSalary(Long id, Long amount) {
-        this.id = id;
-        this.amount = amount;
-    }
-
     public BaseSalary() {
     }
 

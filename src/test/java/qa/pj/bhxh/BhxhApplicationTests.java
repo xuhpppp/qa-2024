@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
@@ -38,14 +42,17 @@ class BhxhApplicationTests {
 	@Autowired
 	private MedicalInsuranceRepository medicalInsuranceRepository;
 	@Autowired
-	private EntityManager entityManager;
-	@Autowired
 	private MedicalInsuranceController medicalInsuranceController;
-
+	@Mock
+	private BaseSalaryRepository mockBaseSalaryRepository;
+	@Mock
+	private MedicalInsuranceRepository mockMedicalInsuranceRepository;
+	@InjectMocks
+	private MedicalInsuranceController mockMedicalInsuranceController;
 	@Test
 	void testExportMedicalInsurance() throws IOException, ParseException {
 
-		ResponseEntity<byte[]> response = exportMedicalInsurance("1", medicalInsuranceRepository);
+		ResponseEntity<byte[]> response = exportMedicalInsurance("2", medicalInsuranceRepository);
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -74,8 +81,8 @@ class BhxhApplicationTests {
 
 		Row dataRow = sheet.getRow(1);
 		assertEquals(1.0, dataRow.getCell(0).getNumericCellValue());
-		assertEquals("SV4018395421067", dataRow.getCell(1).getStringCellValue());
-		assertEquals("Nguyễn Xuân Hưng", dataRow.getCell(2).getStringCellValue());
+		assertEquals("CN3831753609482", dataRow.getCell(1).getStringCellValue());
+		assertEquals("Nguyễn Thị Hương", dataRow.getCell(2).getStringCellValue());
 
 		workbook.close();
 	}
@@ -134,12 +141,12 @@ class BhxhApplicationTests {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-	@Test
-	public void testGetSalary() {
-		ResponseEntity<BaseSalary> result = medicalInsuranceController.getSalary();
-		assertEquals(HttpStatus.OK, result.getStatusCode());
-		assertNotNull(result);
-	}
+//	@Test
+//	public void testGetSalary() {
+//		ResponseEntity<BaseSalary> result = medicalInsuranceController.getSalary();
+//		assertEquals(HttpStatus.OK, result.getStatusCode());
+//		assertNotNull(result);
+//	}
 
 	@Test
 	public void testGetSalary_NotFound() {
@@ -147,29 +154,29 @@ class BhxhApplicationTests {
 		assertFalse(result.isPresent());
 	}
 
-	@Test
-	public void testUpdateSalary() {
-		BaseSalary baseSalary = new BaseSalary(1L, 1000L);
-		baseSalaryRepository.save(baseSalary);
-
-		long newAmount = 2000L;
-
-		Optional<BaseSalary> result = baseSalaryRepository.findById(1L);
-		assertTrue(result.isPresent());
-
-		BaseSalary updatedSalary = result.get();
-		updatedSalary.setAmount(newAmount);
-		try {
-			baseSalaryRepository.save(updatedSalary);
-		} catch (Exception e) {
-			entityManager.clear();
-			entityManager.getTransaction().rollback();
-		}
-
-		Optional<BaseSalary> updatedResult = baseSalaryRepository.findById(1L);
-		assertTrue(updatedResult.isPresent());
-		assertEquals(newAmount, updatedResult.get().getAmount());
-	}
+//	@Test
+//	public void testUpdateSalary() {
+//		BaseSalary baseSalary = new BaseSalary(1L, 1000L);
+//		baseSalaryRepository.save(baseSalary);
+//
+//		long newAmount = 2000L;
+//
+//		Optional<BaseSalary> result = baseSalaryRepository.findById(1L);
+//		assertTrue(result.isPresent());
+//
+//		BaseSalary updatedSalary = result.get();
+//		updatedSalary.setAmount(newAmount);
+//		try {
+//			baseSalaryRepository.save(updatedSalary);
+//		} catch (Exception e) {
+//			entityManager.clear();
+//			entityManager.getTransaction().rollback();
+//		}
+//
+//		Optional<BaseSalary> updatedResult = baseSalaryRepository.findById(1L);
+//		assertTrue(updatedResult.isPresent());
+//		assertEquals(newAmount, updatedResult.get().getAmount());
+//	}
 
 	@Test
 	public void testUpdateSalary_NotFound() {
@@ -215,6 +222,15 @@ class BhxhApplicationTests {
 		ResponseEntity<List<MedicalInsurance>> response9 = medicalInsuranceController.listView(null, "hưng", null, "hà nội", "inValid", null, "1", 0, 10);
 
 		assertEquals(HttpStatus.OK, response1.getStatusCode());
+		assertEquals(HttpStatus.OK, response2.getStatusCode());
+		assertEquals(HttpStatus.OK, response3.getStatusCode());
+		assertEquals(HttpStatus.OK, response4.getStatusCode());
+		assertEquals(HttpStatus.OK, response5.getStatusCode());
+		assertEquals(HttpStatus.OK, response6.getStatusCode());
+		assertEquals(HttpStatus.OK, response7.getStatusCode());
+		assertEquals(HttpStatus.OK, response8.getStatusCode());
+		assertEquals(HttpStatus.OK, response9.getStatusCode());
+
 	}
 
 	@Test
@@ -224,12 +240,12 @@ class BhxhApplicationTests {
 		assertNotNull(response.getBody());
 	}
 
-	@Test
-	public void testGetMedicalInsuranceById() {
-		ResponseEntity<MedicalInsurance> response = medicalInsuranceController.getMedicalInsuranceById(1L);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertNotNull(response.getBody());
-	}
+//	@Test
+//	public void testGetMedicalInsuranceById() {
+//		ResponseEntity<MedicalInsurance> response = medicalInsuranceController.getMedicalInsuranceById(1L);
+//		assertEquals(HttpStatus.OK, response.getStatusCode());
+//		assertNotNull(response.getBody());
+//	}
 
 	@Test
 	public void testGetMedicalInsuranceById_NotFound() {
@@ -241,5 +257,108 @@ class BhxhApplicationTests {
 	public void testDeleteMedicalInsurrance_NotFound() {
 		ResponseEntity<Void> response = medicalInsuranceController.deleteMedicalInsurance(1000L);
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	}
+
+	@Test
+	void testGetSalary() {
+		BaseSalary baseSalary = new BaseSalary();
+		baseSalary.setId(1L);
+		baseSalary.setAmount(50000L);
+
+		when(mockBaseSalaryRepository.findById(anyLong())).thenReturn(Optional.of(baseSalary));
+
+		ResponseEntity<BaseSalary> responseEntity = mockMedicalInsuranceController.getSalary();
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(baseSalary, responseEntity.getBody());
+	}
+
+	@Test
+	void testUpdateSalary() {
+		BaseSalary baseSalary = new BaseSalary();
+		baseSalary.setId(1L);
+		baseSalary.setAmount(50000L);
+
+		BaseSalaryRepository baseSalaryRepository = mock(BaseSalaryRepository.class);
+		when(baseSalaryRepository.findById(1L)).thenReturn(Optional.of(baseSalary));
+		when(baseSalaryRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+		MedicalInsuranceController controller = new MedicalInsuranceController( null,baseSalaryRepository);
+
+		ResponseEntity<BaseSalary> responseEntity = controller.updateSalary(60000L);
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertNotNull(responseEntity.getBody());
+		assertEquals(60000L, responseEntity.getBody().getAmount());
+	}
+
+
+
+
+
+	@Test
+	void testCreateMedicalInsurance() {
+		MedicalInsurance medicalInsurance = new MedicalInsurance();
+
+		when(mockMedicalInsuranceRepository.save(any())).thenReturn(medicalInsurance);
+
+		ResponseEntity<MedicalInsurance> responseEntity = mockMedicalInsuranceController.createMedicalInsurance(medicalInsurance);
+
+		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+		assertEquals(medicalInsurance, responseEntity.getBody());
+	}
+
+	@Test
+	void testGetAllMedicalInsurances() {
+		List<MedicalInsurance> medicalInsurances = new ArrayList<>();
+		medicalInsurances.add(new MedicalInsurance());
+		medicalInsurances.add(new MedicalInsurance());
+
+		when(mockMedicalInsuranceRepository.findAll()).thenReturn(medicalInsurances);
+
+		ResponseEntity<List<MedicalInsurance>> responseEntity = mockMedicalInsuranceController.getAllMedicalInsurances();
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(medicalInsurances, responseEntity.getBody());
+	}
+
+	@Test
+	void testGetMedicalInsuranceById() {
+		MedicalInsurance medicalInsurance = new MedicalInsurance();
+		medicalInsurance.setId(1L);
+
+		when(mockMedicalInsuranceRepository.findById(anyLong())).thenReturn(Optional.of(medicalInsurance));
+
+		ResponseEntity<MedicalInsurance> responseEntity = mockMedicalInsuranceController.getMedicalInsuranceById(1L);
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(medicalInsurance, responseEntity.getBody());
+	}
+
+	@Test
+	void testUpdateMedicalInsurance() {
+		MedicalInsurance medicalInsurance = new MedicalInsurance();
+		medicalInsurance.setId(1L);
+
+		when(mockMedicalInsuranceRepository.findById(anyLong())).thenReturn(Optional.of(medicalInsurance));
+		when(mockMedicalInsuranceRepository.save(any())).thenReturn(medicalInsurance);
+
+		ResponseEntity<MedicalInsurance> responseEntity = mockMedicalInsuranceController.updateMedicalInsurance(1L, medicalInsurance);
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(medicalInsurance, responseEntity.getBody());
+	}
+
+	@Test
+	void testDeleteMedicalInsurance() {
+		MedicalInsurance medicalInsurance = new MedicalInsurance();
+		medicalInsurance.setId(1L);
+
+		when(mockMedicalInsuranceRepository.findById(anyLong())).thenReturn(Optional.of(medicalInsurance));
+
+		ResponseEntity<Void> responseEntity = mockMedicalInsuranceController.deleteMedicalInsurance(1L);
+
+		assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+		verify(mockMedicalInsuranceRepository, times(1)).deleteById(anyLong());
 	}
 }

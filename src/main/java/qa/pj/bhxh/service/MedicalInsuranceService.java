@@ -11,8 +11,4 @@ import java.util.List;
 public class MedicalInsuranceService {
     @Autowired
     private MedicalInsuranceRepository medicalInsuranceRepository;
-
-    public List<MedicalInsurance> findInsurance() {
-        return medicalInsuranceRepository.findAll();
-    }
 }

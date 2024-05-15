@@ -121,22 +121,20 @@ public class MedicalInsuranceController {
     }
 
     @GetMapping("/update-salary")
-    public ResponseEntity<BaseSalary> updateSalary( @RequestParam Long amount) {
+    public ResponseEntity<BaseSalary> updateSalary(@RequestParam Long amount) {
         int id = 1;
         Optional<BaseSalary> salaryOptional = baseSalaryRepository.findById((long) id);
 
         if (salaryOptional.isPresent()) {
             BaseSalary baseSalary = salaryOptional.get();
-
-            baseSalary.amount = amount;
-
+            baseSalary.setAmount(amount);
             BaseSalary updatedSalary = baseSalaryRepository.save(baseSalary);
-
             return new ResponseEntity<>(updatedSalary, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping
     public ResponseEntity<MedicalInsurance> createMedicalInsurance(@Valid @RequestBody MedicalInsurance medicalInsurance) {
         MedicalInsurance savedInsurance = medicalInsuranceRepository.save(medicalInsurance);
