@@ -20,11 +20,11 @@ import qa.pj.bhxh.model.Gender;
 import qa.pj.bhxh.model.MedicalInsurance;
 import qa.pj.bhxh.repository.BaseSalaryRepository;
 import qa.pj.bhxh.repository.MedicalInsuranceRepository;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -36,25 +36,14 @@ class BhxhApplicationTests {
 	@Autowired
 	private BaseSalaryRepository baseSalaryRepository;
 	@Autowired
-	private static MedicalInsuranceRepository medicalInsuranceRepository;
+	private MedicalInsuranceRepository medicalInsuranceRepository;
 	@Autowired
 	private EntityManager entityManager;
 	@Autowired
 	private MedicalInsuranceController medicalInsuranceController;
 
-
-	void testExportMedicalInsurance() throws IOException {
-		List<MedicalInsurance> medicalInsurances = new ArrayList<>();
-		MedicalInsurance medicalInsurance1 = new MedicalInsurance();
-		medicalInsurance1.setInsuranceCode("123");
-		medicalInsurance1.setFullName("John Doe");
-		medicalInsurance1.setDob(new Date());
-		medicalInsurance1.setGender(Gender.MALE);
-		medicalInsurance1.setAddress("123 Main Street");
-		medicalInsurance1.setRegistrationPlace("Hospital A");
-		medicalInsurance1.setValidTo(new Date());
-		medicalInsurance1.setNearestValidDate(new Date());
-		medicalInsurances.add(medicalInsurance1);
+	@Test
+	void testExportMedicalInsurance() throws IOException, ParseException {
 
 		ResponseEntity<byte[]> response = exportMedicalInsurance("1", medicalInsuranceRepository);
 
@@ -85,8 +74,8 @@ class BhxhApplicationTests {
 
 		Row dataRow = sheet.getRow(1);
 		assertEquals(1.0, dataRow.getCell(0).getNumericCellValue());
-		assertEquals("123", dataRow.getCell(1).getStringCellValue());
-		assertEquals("John Doe", dataRow.getCell(2).getStringCellValue());
+		assertEquals("SV4018395421067", dataRow.getCell(1).getStringCellValue());
+		assertEquals("Nguyễn Xuân Hưng", dataRow.getCell(2).getStringCellValue());
 
 		workbook.close();
 	}

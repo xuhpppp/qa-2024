@@ -15,15 +15,12 @@ import qa.pj.bhxh.model.Gender;
 import qa.pj.bhxh.model.MedicalInsurance;
 import qa.pj.bhxh.repository.BaseSalaryRepository;
 import qa.pj.bhxh.repository.MedicalInsuranceRepository;
-import qa.pj.bhxh.service.MedicalInsuranceService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
