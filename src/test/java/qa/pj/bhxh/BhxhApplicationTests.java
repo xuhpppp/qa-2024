@@ -147,8 +147,8 @@ class BhxhApplicationTests {
 	}
 	@Test
 	public void testGetSalary() {
-		Optional<BaseSalary> result = baseSalaryRepository.findById(1L);
-		assertTrue(result.isPresent());
+		ResponseEntity<BaseSalary> result = medicalInsuranceController.getSalary();
+		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertNotNull(result);
 	}
 
@@ -226,5 +226,31 @@ class BhxhApplicationTests {
 		ResponseEntity<List<MedicalInsurance>> response9 = medicalInsuranceController.listView(null, "hưng", null, "hà nội", "inValid", null, "1", 0, 10);
 
 		assertEquals(HttpStatus.OK, response1.getStatusCode());
+	}
+
+	@Test
+	public void testGetAllMedicalInsurrance() {
+		ResponseEntity<List<MedicalInsurance>> response = medicalInsuranceController.getAllMedicalInsurances();
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+	}
+
+	@Test
+	public void testGetMedicalInsuranceById() {
+		ResponseEntity<MedicalInsurance> response = medicalInsuranceController.getMedicalInsuranceById(1L);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+	}
+
+	@Test
+	public void testGetMedicalInsuranceById_NotFound() {
+		ResponseEntity<MedicalInsurance> response = medicalInsuranceController.getMedicalInsuranceById(0L);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	}
+
+	@Test
+	public void testDeleteMedicalInsurrance_NotFound() {
+		ResponseEntity<Void> response = medicalInsuranceController.deleteMedicalInsurance(1000L);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 }
